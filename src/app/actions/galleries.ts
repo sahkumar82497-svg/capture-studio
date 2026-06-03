@@ -1,6 +1,6 @@
 "use server";
 
-import prisma from "@/lib/prisma";
+import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
 
 export async function createGallery(data: {
@@ -10,14 +10,15 @@ export async function createGallery(data: {
   status: string;
 }) {
   try {
-    const gallery = await prisma.gallery.create({
-      data: {
-        name: data.name,
-        slug: data.slug,
-        date: data.date,
-        status: data.status,
-      }
-    });
+    const supabase = await createClient();
+    const { data: gallery, error } = await supabase.from('galleries').insert([{
+      name: data.name,
+      slug: data.slug,
+      date: data.date,
+      status: data.status,
+    }]).select().single();
+
+    if (error) throw error;
     
     revalidatePath("/admin/galleries");
     revalidatePath("/client");
@@ -31,12 +32,13 @@ export async function createGallery(data: {
 
 export async function getGalleries() {
   try {
-    const galleries = await prisma.gallery.findMany({
-      orderBy: { created_at: "desc" }
-    });
-    return galleries;
+    const supabase = await createClient();
+    const { data: galleries, error } = await supabase.from('galleries').select('*').order('created_at', { ascending: false });
+    if (error) throw error;
+    return galleries || [];
   } catch (error: any) {
     console.error("Fetch Galleries Error:", error.message);
     return [];
   }
 }
+
