@@ -5,21 +5,19 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, Camera } from "lucide-react";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { AuthModal } from "@/components/auth/AuthModal";
 
 const NAV_LINKS = [
   { name: "Home", href: "/" },
   { name: "Portfolio", href: "/portfolio" },
   { name: "Services", href: "/services" },
   { name: "Contact", href: "/contact" },
-  { name: "Client Login", href: "/client" },
+  { name: "My Dashboard", href: "/client" },
 ];
 
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
-  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
 
@@ -57,40 +55,26 @@ export function Navbar() {
 
         {/* Desktop Nav */}
         <nav className="hidden md:flex items-center gap-8">
-          {NAV_LINKS.map((link) => {
-            if (link.name === "Client Login") {
-              return (
-                <button
-                  key={link.name}
-                  onClick={() => setIsAuthModalOpen(true)}
-                  className="text-sm font-medium transition-colors hover:text-primary text-muted-foreground"
-                >
-                  {link.name}
-                </button>
-              );
-            }
-
-            return (
-              <Link
-                key={link.href}
-                href={link.href}
-                className={cn(
-                  "text-sm font-medium transition-colors hover:text-primary relative",
-                  pathname === link.href
-                    ? "text-primary"
-                    : "text-muted-foreground"
-                )}
-              >
-                {link.name}
-                {pathname === link.href && (
-                  <motion.div
-                    layoutId="navbar-indicator"
-                    className="absolute -bottom-1 left-0 right-0 h-[2px] bg-primary rounded-full"
-                  />
-                )}
-              </Link>
-            );
-          })}
+          {NAV_LINKS.map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              className={cn(
+                "text-sm font-medium transition-colors hover:text-primary relative",
+                pathname === link.href
+                  ? "text-primary"
+                  : "text-muted-foreground"
+              )}
+            >
+              {link.name}
+              {pathname === link.href && (
+                <motion.div
+                  layoutId="navbar-indicator"
+                  className="absolute -bottom-1 left-0 right-0 h-[2px] bg-primary rounded-full"
+                />
+              )}
+            </Link>
+          ))}
           <div className="flex items-center gap-3 ml-4">
             <Link href="/book" className={buttonVariants({ className: "rounded-full" })}>Book Session</Link>
           </div>
@@ -114,42 +98,27 @@ export function Navbar() {
             exit={{ opacity: 0, y: -20 }}
             className="absolute top-full left-0 w-full bg-background border-b border-border shadow-lg py-4 md:hidden flex flex-col items-center gap-4"
           >
-            {NAV_LINKS.map((link) => {
-              if (link.name === "Client Login") {
-                return (
-                  <button
-                    key={link.name}
-                    onClick={() => { setIsOpen(false); setIsAuthModalOpen(true); }}
-                    className="text-lg font-medium w-full text-center py-2 text-muted-foreground"
-                  >
-                    {link.name}
-                  </button>
-                );
-              }
-              return (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  onClick={() => setIsOpen(false)}
-                  className={cn(
-                    "text-lg font-medium w-full text-center py-2",
-                    pathname === link.href
-                      ? "text-primary"
-                      : "text-muted-foreground"
-                  )}
-                >
-                  {link.name}
-                </Link>
-              );
-            })}
+            {NAV_LINKS.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                onClick={() => setIsOpen(false)}
+                className={cn(
+                  "text-lg font-medium w-full text-center py-2",
+                  pathname === link.href
+                    ? "text-primary"
+                    : "text-muted-foreground"
+                )}
+              >
+                {link.name}
+              </Link>
+            ))}
             <Link href="/book" onClick={() => setIsOpen(false)} className={buttonVariants({ className: "w-3/4 rounded-full mt-2" })}>
               Book Session
             </Link>
           </motion.div>
         )}
       </AnimatePresence>
-      {/* Auth Modal Overlay */}
-      <AuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />
     </header>
   );
 }

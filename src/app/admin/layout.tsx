@@ -3,14 +3,13 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Camera, LayoutDashboard, Image as ImageIcon, Calendar, Settings, LogOut, DollarSign } from "lucide-react";
+import { Camera, LayoutDashboard, Image as ImageIcon, Calendar, Settings, LogOut } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const ADMIN_LINKS = [
   { name: "Dashboard", href: "/admin", icon: LayoutDashboard },
   { name: "Galleries", href: "/admin/galleries", icon: ImageIcon },
   { name: "Bookings", href: "/admin/bookings", icon: Calendar },
-  { name: "Cost Monitor", href: "/admin/costs", icon: DollarSign },
   { name: "Settings", href: "/admin/settings", icon: Settings },
 ];
 

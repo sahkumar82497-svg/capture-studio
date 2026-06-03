@@ -16,28 +16,40 @@ export async function createBooking(data: {
 }) {
   try {
     const supabase = await createClient();
-    const { data: booking, error } = await supabase.from('bookings').insert([{
-      client_id: data.client_id,
-      name: data.name,
-      phone: data.phone,
-      venue: data.venue,
+    
+    // Build insert object with only the core fields first
+    const insertData: Record<string, any> = {
       package_type: data.package_type,
       event_date: data.event_date,
       amount: data.amount,
       advance_paid: data.advance_paid,
       status: data.status,
-    }]).select().single();
+    };
+    if (data.client_id) insertData.client_id = data.client_id;
+    if (data.name) insertData.name = data.name;
+    if (data.phone) insertData.phone = data.phone;
+    if (data.venue) insertData.venue = data.venue;
 
-    if (error) throw error;
+    // Try inserting with all fields first
+    let result = await supabase.from('bookings').insert([insertData]).select().single();
+    
+    // If phone/venue columns don't exist, retry without them
+    if (result.error && result.error.message?.includes('column')) {
+      delete insertData.phone;
+      delete insertData.venue;
+      result = await supabase.from('bookings').insert([insertData]).select().single();
+    }
+
+    if (result.error) throw result.error;
     
     revalidatePath("/admin/bookings");
     revalidatePath("/client");
     revalidatePath("/admin");
     
-    return { success: true, booking };
+    return { success: true, booking: result.data };
   } catch (error: any) {
     console.error("Booking Creation Error:", error.message);
-    return { success: false, error: "Database error. Please try again." };
+    return { success: false, error: error.message || "Database error. Please try again." };
   }
 }
 
