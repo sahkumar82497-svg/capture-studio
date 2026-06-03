@@ -1,0 +1,47 @@
+{
+  "bookings": [
+    {
+      "id": "0.02769279254961421",
+      "package_type": "wedding_premium",
+      "event_date": "2026-06-03",
+      "amount": 120000,
+      "advance_paid": 0,
+      "status": "cancelled",
+      "created_at": "2026-06-03T06:27:28.320Z"
+    }
+  ],
+  "galleries": [
+    {
+      "id": "0.7627308898679225",
+      "name": "New Fallback Gallery",
+      "slug": "new-fallback-383",
+      "date": "2026-06-03T06:29:50.020Z",
+      "status": "draft",
+      "created_at": "2026-06-03T06:29:50.435Z"
+    },
+    {
+      "id": "0.8201681476246218",
+      "name": "New Fallback Gallery",
+      "slug": "new-fallback-108",
+      "date": "2026-06-03T06:30:16.964Z",
+      "status": "draft",
+      "created_at": "2026-06-03T06:30:17.232Z"
+    },
+    {
+      "id": "0.1801290993704301",
+      "name": "Modal Test Gallery",
+      "slug": "modal-test-gallery",
+      "date": "2026-06-03T06:41:52.945Z",
+      "status": "draft",
+      "created_at": "2026-06-03T06:41:53.604Z"
+    },
+    {
+      "id": "0.3701111958935184",
+      "name": "alok weds kalpana",
+      "slug": "alok-weds-kalpana",
+      "date": "2026-06-03",
+      "status": "draft",
+      "created_at": "2026-06-03T07:10:09.129Z"
+    }
+  ]
+}
