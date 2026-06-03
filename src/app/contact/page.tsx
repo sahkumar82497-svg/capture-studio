@@ -1,10 +1,47 @@
 "use client";
 
+import { useState } from "react";
 import { motion } from "framer-motion";
-import { Mail, MapPin, Phone } from "lucide-react";
+import { Mail, MapPin, Phone, Loader2, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { submitContactMessage } from "@/app/actions/contact";
+import { toast } from "sonner";
 
 export default function ContactPage() {
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [sent, setSent] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!firstName.trim() || !email.trim() || !message.trim()) {
+      toast.error("Please fill in all required fields.");
+      return;
+    }
+    setLoading(true);
+    const result = await submitContactMessage({
+      first_name: firstName.trim(),
+      last_name: lastName.trim(),
+      email: email.trim(),
+      message: message.trim(),
+    });
+    setLoading(false);
+
+    if (result.success) {
+      toast.success("Message sent successfully! We'll get back to you soon.");
+      setSent(true);
+      setFirstName("");
+      setLastName("");
+      setEmail("");
+      setMessage("");
+    } else {
+      toast.error(result.error || "Something went wrong.");
+    }
+  };
+
   return (
     <div className="flex flex-col w-full pb-24">
       <section className="pt-32 pb-16 px-4 md:px-6">
@@ -84,32 +121,41 @@ export default function ContactPage() {
             transition={{ delay: 0.3 }}
             className="bg-card border border-border rounded-3xl p-8"
           >
-            <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <label className="text-sm font-medium">First Name</label>
-                  <input type="text" className="w-full bg-background border border-border rounded-lg px-4 py-2 focus:outline-none focus:border-primary transition-colors" placeholder="John" />
+            {sent ? (
+              <div className="flex flex-col items-center justify-center py-12 text-center">
+                <CheckCircle2 className="w-16 h-16 text-green-500 mb-4" />
+                <h3 className="font-heading text-2xl font-bold mb-2">Message Sent!</h3>
+                <p className="text-muted-foreground mb-6">Thank you for reaching out. We&apos;ll respond within 24 hours.</p>
+                <Button onClick={() => setSent(false)} variant="outline" className="rounded-xl">Send Another Message</Button>
+              </div>
+            ) : (
+              <form className="space-y-4" onSubmit={handleSubmit}>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">First Name *</label>
+                    <input type="text" value={firstName} onChange={e => setFirstName(e.target.value)} required className="w-full bg-background border border-border rounded-lg px-4 py-2 focus:outline-none focus:border-primary transition-colors" placeholder="John" />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">Last Name</label>
+                    <input type="text" value={lastName} onChange={e => setLastName(e.target.value)} className="w-full bg-background border border-border rounded-lg px-4 py-2 focus:outline-none focus:border-primary transition-colors" placeholder="Doe" />
+                  </div>
                 </div>
+                
                 <div className="space-y-2">
-                  <label className="text-sm font-medium">Last Name</label>
-                  <input type="text" className="w-full bg-background border border-border rounded-lg px-4 py-2 focus:outline-none focus:border-primary transition-colors" placeholder="Doe" />
+                  <label className="text-sm font-medium">Email Address *</label>
+                  <input type="email" value={email} onChange={e => setEmail(e.target.value)} required className="w-full bg-background border border-border rounded-lg px-4 py-2 focus:outline-none focus:border-primary transition-colors" placeholder="john@example.com" />
                 </div>
-              </div>
-              
-              <div className="space-y-2">
-                <label className="text-sm font-medium">Email Address</label>
-                <input type="email" className="w-full bg-background border border-border rounded-lg px-4 py-2 focus:outline-none focus:border-primary transition-colors" placeholder="john@example.com" />
-              </div>
 
-              <div className="space-y-2">
-                <label className="text-sm font-medium">Message</label>
-                <textarea rows={4} className="w-full bg-background border border-border rounded-lg px-4 py-2 focus:outline-none focus:border-primary transition-colors resize-none" placeholder="Tell us about your event..." />
-              </div>
+                <div className="space-y-2">
+                  <label className="text-sm font-medium">Message *</label>
+                  <textarea rows={4} value={message} onChange={e => setMessage(e.target.value)} required className="w-full bg-background border border-border rounded-lg px-4 py-2 focus:outline-none focus:border-primary transition-colors resize-none" placeholder="Tell us about your event..." />
+                </div>
 
-              <Button type="submit" className="w-full rounded-lg" size="lg">
-                Send Message
-              </Button>
-            </form>
+                <Button type="submit" className="w-full rounded-lg" size="lg" disabled={loading}>
+                  {loading ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Sending...</> : "Send Message"}
+                </Button>
+              </form>
+            )}
           </motion.div>
         </div>
       </section>

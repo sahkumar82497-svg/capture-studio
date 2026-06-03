@@ -4,7 +4,7 @@ import { cookies } from 'next/headers'
 const customFetch = (url: RequestInfo | URL, options?: RequestInit) => {
   return fetch(url, {
     ...options,
-    signal: AbortSignal.timeout(1500)
+    signal: AbortSignal.timeout(8000)
   });
 };
 

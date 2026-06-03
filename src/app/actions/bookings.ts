@@ -6,6 +6,8 @@ import { revalidatePath } from "next/cache";
 export async function createBooking(data: {
   client_id?: string;
   name?: string;
+  phone?: string;
+  venue?: string;
   package_type: string;
   event_date: string;
   amount: number;
@@ -17,6 +19,8 @@ export async function createBooking(data: {
     const { data: booking, error } = await supabase.from('bookings').insert([{
       client_id: data.client_id,
       name: data.name,
+      phone: data.phone,
+      venue: data.venue,
       package_type: data.package_type,
       event_date: data.event_date,
       amount: data.amount,

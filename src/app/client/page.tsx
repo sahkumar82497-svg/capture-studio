@@ -2,19 +2,47 @@
 
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { Camera, Calendar, LogOut, Download, Image as ImageIcon, Loader2 } from "lucide-react";
+import { Camera, Calendar, LogOut, Download, Image as ImageIcon, Loader2, Lock } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { getGalleries } from "@/app/actions/galleries";
 import { getBookings } from "@/app/actions/bookings";
 import { signOutAction } from "@/app/actions/auth";
+import { createClient } from "@/lib/supabase/client";
 
 export default function ClientDashboard() {
   const router = useRouter();
   const [galleries, setGalleries] = useState<any[]>([]);
   const [bookings, setBookings] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState<any>(null);
+  const [authChecked, setAuthChecked] = useState(false);
+
+  useEffect(() => {
+    async function checkAuth() {
+      const supabase = createClient();
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        router.push("/");
+        return;
+      }
+      setUser(user);
+      setAuthChecked(true);
+    }
+    checkAuth();
+  }, [router]);
+
+  useEffect(() => {
+    if (!authChecked) return;
+    async function load() {
+      const [gals, bks] = await Promise.all([getGalleries(), getBookings()]);
+      setGalleries(gals);
+      setBookings(bks);
+      setLoading(false);
+    }
+    load();
+  }, [authChecked]);
 
   const handleSignOut = async () => {
     await signOutAction();
@@ -29,15 +57,22 @@ export default function ClientDashboard() {
     alert(`Downloading gallery: ${name}`);
   };
 
-  useEffect(() => {
-    async function load() {
-      const [gals, bks] = await Promise.all([getGalleries(), getBookings()]);
-      setGalleries(gals);
-      setBookings(bks);
-      setLoading(false);
-    }
-    load();
-  }, []);
+  const getUserName = () => {
+    if (!user) return "Client";
+    const meta = user.user_metadata;
+    if (meta?.full_name) return meta.full_name;
+    if (user.email) return user.email.split("@")[0];
+    return "Client";
+  };
+
+  if (!authChecked) {
+    return (
+      <div className="flex flex-col w-full min-h-screen items-center justify-center">
+        <Loader2 className="w-10 h-10 animate-spin text-primary" />
+        <p className="text-muted-foreground mt-4">Checking authentication...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col w-full min-h-screen bg-muted/20">
@@ -45,7 +80,7 @@ export default function ClientDashboard() {
       <header className="bg-card border-b border-border py-8 px-4 md:px-6">
         <div className="container mx-auto flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
           <div>
-            <h1 className="font-heading text-3xl font-bold">Welcome, Priya!</h1>
+            <h1 className="font-heading text-3xl font-bold">Welcome, {getUserName()}!</h1>
             <p className="text-muted-foreground">Manage your bookings and galleries here.</p>
           </div>
           <Button variant="outline" size="sm" className="rounded-full" onClick={handleSignOut}>

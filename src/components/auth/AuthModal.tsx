@@ -9,10 +9,12 @@ import { Button } from "@/components/ui/button";
 
 export function AuthModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
   const [isSignUp, setIsSignUp] = useState(false);
+  const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
   const router = useRouter();
 
   if (!isOpen) return null;
@@ -21,19 +23,32 @@ export function AuthModal({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
     e.preventDefault();
     setLoading(true);
     setError(null);
+    setSuccess(null);
     const supabase = createClient();
 
     try {
       if (isSignUp) {
-        const { error } = await supabase.auth.signUp({ email, password });
+        if (!fullName.trim()) {
+          throw new Error("Please enter your full name.");
+        }
+        const { error } = await supabase.auth.signUp({
+          email,
+          password,
+          options: {
+            data: { full_name: fullName.trim() }
+          }
+        });
         if (error) throw error;
-        alert("Sign up successful! Please check your email or proceed to login.");
+        setSuccess("Account created successfully! You can now sign in.");
         setIsSignUp(false);
+        setFullName("");
+        setPassword("");
       } else {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
         onClose();
         router.push("/client");
+        router.refresh();
       }
     } catch (err: any) {
       setError(err.message || "An error occurred during authentication.");
@@ -75,6 +90,19 @@ export function AuthModal({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
             </p>
 
             <form onSubmit={handleSubmit} className="space-y-4">
+              {isSignUp && (
+                <div className="space-y-2">
+                  <label className="text-sm font-medium">Full Name</label>
+                  <input 
+                    type="text" 
+                    value={fullName}
+                    onChange={(e) => setFullName(e.target.value)}
+                    required
+                    className="w-full bg-background border border-border rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all"
+                    placeholder="Your full name" 
+                  />
+                </div>
+              )}
               <div className="space-y-2">
                 <label className="text-sm font-medium">Email Address</label>
                 <input 
@@ -93,12 +121,14 @@ export function AuthModal({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
+                  minLength={6}
                   className="w-full bg-background border border-border rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all"
                   placeholder="••••••••" 
                 />
               </div>
 
               {error && <p className="text-destructive text-sm font-medium">{error}</p>}
+              {success && <p className="text-green-500 text-sm font-medium">{success}</p>}
 
               <Button type="submit" className="w-full rounded-xl mt-4 py-6 text-lg font-semibold" disabled={loading}>
                 {loading && <Loader2 className="w-5 h-5 mr-2 animate-spin" />}
@@ -109,7 +139,7 @@ export function AuthModal({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
             <div className="mt-8 text-center text-sm text-muted-foreground">
               {isSignUp ? "Already have an account? " : "Don't have an account? "}
               <button 
-                onClick={() => { setIsSignUp(!isSignUp); setError(null); }} 
+                onClick={() => { setIsSignUp(!isSignUp); setError(null); setSuccess(null); }} 
                 className="text-primary hover:underline font-semibold"
                 type="button"
               >
