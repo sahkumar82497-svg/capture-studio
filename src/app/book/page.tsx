@@ -199,7 +199,7 @@ export default function BookPage() {
                   </div>
                   <div className="space-y-2">
                     <label className="text-sm font-medium">Phone Number</label>
-                    <input type="tel" value={phone} onChange={e => setPhone(e.target.value)} className="w-full bg-background border border-border rounded-xl px-4 py-3" placeholder="+91 98765 43210" />
+                    <input type="tel" value={phone} onChange={e => setPhone(e.target.value)} className="w-full bg-background border border-border rounded-xl px-4 py-3" placeholder="+91 9348859053" />
                   </div>
                   <div className="space-y-2 md:col-span-2">
                     <label className="text-sm font-medium">Event Date *</label>

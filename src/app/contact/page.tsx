@@ -82,9 +82,11 @@ export default function ContactPage() {
               <div>
                 <h3 className="font-semibold mb-1">Our Studio</h3>
                 <p className="text-muted-foreground text-sm">
-                  The Capture Studio<br />
-                  Sector 2, Rourkela<br />
-                  Odisha, India 769001
+                  Pratima Complex near Study Point<br />
+                  Udit Nagar, Rourkela (1st branch)<br />
+                  <br />
+                  AL-28 Basanti Colony, Shop No. 9<br />
+                  Near Panitanki, Rourkela (2nd branch)
                 </p>
               </div>
             </div>
@@ -95,8 +97,8 @@ export default function ContactPage() {
               </div>
               <div>
                 <h3 className="font-semibold mb-1">Email Us</h3>
-                <a href="mailto:hello@thecapturestudio.in" className="text-muted-foreground text-sm hover:text-primary transition-colors">
-                  hello@thecapturestudio.in
+                <a href="mailto:thecapturestudiorkl@gmail.com" className="text-muted-foreground text-sm hover:text-primary transition-colors">
+                  thecapturestudiorkl@gmail.com
                 </a>
               </div>
             </div>
@@ -107,8 +109,8 @@ export default function ContactPage() {
               </div>
               <div>
                 <h3 className="font-semibold mb-1">Call Us</h3>
-                <a href="tel:+919876543210" className="text-muted-foreground text-sm hover:text-primary transition-colors">
-                  +91 98765 43210
+                <a href="tel:+919348859053" className="text-muted-foreground text-sm hover:text-primary transition-colors">
+                  +91 9348859053
                 </a>
               </div>
             </div>

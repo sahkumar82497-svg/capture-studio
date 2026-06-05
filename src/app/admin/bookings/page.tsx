@@ -263,7 +263,7 @@ export default function AdminBookings() {
                     className="w-full bg-background border border-border rounded-xl px-4 py-3"
                     value={newPhone}
                     onChange={(e) => setNewPhone(e.target.value)}
-                    placeholder="+91 98765 43210"
+                    placeholder="+91 9348859053"
                   />
                 </div>
                 <div className="space-y-2">

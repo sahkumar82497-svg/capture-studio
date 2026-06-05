@@ -58,15 +58,15 @@ export default function AdminSettings() {
                 </div>
                 <div className="space-y-2">
                   <label className="text-sm font-medium">Contact Email</label>
-                  <input type="email" defaultValue="admin@thecapturestudio.in" className="w-full bg-background border border-border rounded-xl px-4 py-2.5 focus:outline-none focus:border-primary" />
+                  <input type="email" defaultValue="thecapturestudiorkl@gmail.com" className="w-full bg-background border border-border rounded-xl px-4 py-2.5 focus:outline-none focus:border-primary" />
                 </div>
                 <div className="space-y-2">
                   <label className="text-sm font-medium">Phone Number</label>
-                  <input type="tel" defaultValue="+91 98765 43210" className="w-full bg-background border border-border rounded-xl px-4 py-2.5 focus:outline-none focus:border-primary" />
+                  <input type="tel" defaultValue="+91 9348859053" className="w-full bg-background border border-border rounded-xl px-4 py-2.5 focus:outline-none focus:border-primary" />
                 </div>
                 <div className="space-y-2">
                   <label className="text-sm font-medium">Studio Address</label>
-                  <textarea rows={3} defaultValue="Sector 2, Rourkela, Odisha, India 769001" className="w-full bg-background border border-border rounded-xl px-4 py-2.5 focus:outline-none focus:border-primary resize-none" />
+                  <textarea rows={3} defaultValue="Pratima Complex near Study Point, Udit Nagar, Rourkela (1st branch)&#13;&#10;AL-28 Basanti Colony, Shop No. 9 Near Panitanki, Rourkela (2nd branch)" className="w-full bg-background border border-border rounded-xl px-4 py-2.5 focus:outline-none focus:border-primary resize-none" />
                 </div>
               </div>
             </div>
